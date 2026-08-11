@@ -3,14 +3,24 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { StripedPlaceholder } from "@/components/site/Placeholder";
 import { StarBorder } from "@/components/site/StarBorder";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
+import { BookingCalendar } from "@/components/site/BookingCalendar";
+import { ART_HOUSE_PHOTOS, HILL_EAST_PHOTOS } from "@/lib/property-photos";
 
 export const Route = createFileRoute("/properties")({
   head: () => ({
     meta: [
       { title: "Our Properties — Crown Management" },
-      { name: "description", content: "Curated short-term residences in Washington, DC. The Art House, on Capitol Hill, and more." },
+      {
+        name: "description",
+        content:
+          "Curated short-term residences in Washington, DC — The Art House on Capitol Hill and the Hill East Hide Away. Check availability and book direct.",
+      },
       { property: "og:title", content: "Our Properties — Crown Management" },
-      { property: "og:description", content: "Curated short-term residences in Washington, DC." },
+      {
+        property: "og:description",
+        content: "Curated short-term residences in Washington, DC. Book direct — no platform fees.",
+      },
       { property: "og:url", content: "/properties" },
     ],
     links: [{ rel: "canonical", href: "/properties" }],
@@ -18,19 +28,12 @@ export const Route = createFileRoute("/properties")({
   component: Properties,
 });
 
-const GALLERY = [
-  "https://images.homes.com/listings/210/3167689394-010294422/406-15th-st-se-washington-dc-unit-b-primaryphoto.jpg",
-  "https://images.homes.com/listings/214/4167689394-010294422/406-15th-st-se-washington-dc-unit-b-buildingphoto-2.jpg",
-  "https://images.homes.com/listings/117/6167689394-010294422/406-15th-st-se-washington-dc-unit-b-buildingphoto-3.jpg",
-  "https://images.homes.com/listings/117/8167689394-010294422/406-15th-st-se-washington-dc-unit-b-buildingphoto-4.jpg",
-];
-// NOTE: these images sourced from homes.com — confirm usage rights before launch.
-
 function Properties() {
   return (
     <>
       <section className="pt-24 pb-12">
         <div className="max-w-[1200px] mx-auto px-6">
+          <Breadcrumbs className="mb-8" />
           <p className="eyebrow mb-4">Our Residences</p>
           <h1 className="font-display font-bold text-[44px] md:text-[56px] leading-[1.08] text-charcoal max-w-3xl">
             Designed to feel like yours
@@ -43,9 +46,11 @@ function Properties() {
       <section className="py-16">
         <div className="max-w-[1200px] mx-auto px-6 flex flex-col gap-16">
           <ArtHouseDetail />
-          <ComingSoonCard />
+          <HillEastDetail />
         </div>
       </section>
+
+      <BookingCalendar />
 
       <TrustBand />
     </>
@@ -64,11 +69,22 @@ function SearchBar() {
           onSubmit={onSubmit}
           className="bg-linen border border-line rounded-[4px] p-4 grid gap-3 md:grid-cols-5 items-end"
         >
-          <Field label="Location"><input className={inputCls} placeholder="Washington, DC" /></Field>
-          <Field label="Check-in"><input type="date" className={inputCls} /></Field>
-          <Field label="Check-out"><input type="date" className={inputCls} /></Field>
-          <Field label="Guests"><input type="number" min={1} defaultValue={2} className={inputCls} /></Field>
-          <button type="submit" className="bg-charcoal text-sand px-6 py-3 rounded-sm font-body text-[14px] font-semibold tracking-[0.02em] hover:bg-clay transition-colors duration-150">
+          <Field label="Location">
+            <input className={inputCls} placeholder="Washington, DC" />
+          </Field>
+          <Field label="Check-in">
+            <input type="date" className={inputCls} />
+          </Field>
+          <Field label="Check-out">
+            <input type="date" className={inputCls} />
+          </Field>
+          <Field label="Guests">
+            <input type="number" min={1} defaultValue={2} className={inputCls} />
+          </Field>
+          <button
+            type="submit"
+            className="bg-charcoal text-sand px-6 py-3 rounded-sm font-body text-[14px] font-semibold tracking-[0.02em] hover:bg-clay transition-colors duration-150"
+          >
             Check Availability
           </button>
         </form>
@@ -89,19 +105,20 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function ArtHouseDetail() {
+function Gallery({ photos, alt }: { photos: string[]; alt: string }) {
   const [active, setActive] = useState(0);
   return (
-    <article className="grid gap-10 lg:grid-cols-[1.1fr_1fr]">
-      <div>
-        <div className="aspect-[4/3] overflow-hidden rounded-[4px] border border-line bg-linen">
-          <img src={GALLERY[active]} alt="The Art House" className="w-full h-full object-cover" />
-        </div>
+    <div>
+      <div className="aspect-[4/3] overflow-hidden rounded-[4px] border border-line bg-linen">
+        <img src={photos[active]} alt={alt} className="w-full h-full object-cover" />
+      </div>
+      {photos.length > 1 && (
         <div className="mt-3 grid grid-cols-4 gap-2">
-          {GALLERY.map((src, i) => (
+          {photos.slice(0, 8).map((src, i) => (
             <button
               key={src}
               onClick={() => setActive(i)}
+              aria-label={`View photo ${i + 1} of ${alt}`}
               className={`aspect-[3/2] overflow-hidden rounded-sm border ${
                 active === i ? "border-clay" : "border-line"
               }`}
@@ -110,26 +127,36 @@ function ArtHouseDetail() {
             </button>
           ))}
         </div>
-      </div>
+      )}
+    </div>
+  );
+}
+
+function ArtHouseDetail() {
+  return (
+    <article className="grid gap-10 lg:grid-cols-[1.1fr_1fr]">
+      <Gallery photos={ART_HOUSE_PHOTOS} alt="The Art House" />
 
       <div>
         <p className="eyebrow mb-3">Capitol Hill · Washington, DC 20003</p>
-        <h2 className="font-display font-medium text-[40px] leading-[1.1] text-charcoal">The Art House</h2>
+        <h2 className="font-display font-medium text-[40px] leading-[1.1] text-charcoal">
+          The Art House
+        </h2>
         <p className="mt-3 font-mono text-[12px] uppercase tracking-[0.12em] text-taupe">
           2 BR · 2.5 BA · 1,700 SQ FT · Capitol Hill
         </p>
 
         <p className="mt-6 text-[17px] leading-[1.65] text-charcoal/85">
-          The Art House draws its inspiration from the vibrant creative energy of Washington, DC's Artist
-          District, where history, culture, and contemporary expression intersect. Designed as more than a
-          residence, the home serves as a private gallery that celebrates local artistry, natural light, and
-          thoughtful design.
+          The Art House draws its inspiration from the vibrant creative energy of Washington, DC's
+          Artist District, where history, culture, and contemporary expression intersect. Designed
+          as more than a residence, the home serves as a private gallery that celebrates local
+          artistry, natural light, and thoughtful design.
         </p>
         <p className="mt-4 text-[17px] leading-[1.65] text-charcoal/85">
-          The expansive skylight floods the central gallery hallway with daylight, creating an ever-changing
-          canvas that highlights curated works by DC artists while fostering a sense of openness, tranquility,
-          and connection to the city's creative spirit. Every detail reflects the belief that art should be
-          woven into everyday living.
+          The expansive skylight floods the central gallery hallway with daylight, creating an
+          ever-changing canvas that highlights curated works by DC artists while fostering a sense
+          of openness, tranquility, and connection to the city's creative spirit. Every detail
+          reflects the belief that art should be woven into everyday living.
         </p>
 
         <ul className="mt-6 flex flex-wrap gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.12em] text-taupe">
@@ -155,7 +182,7 @@ function ArtHouseDetail() {
 
         <Link
           to="/contact"
-          search={{ type: "book" } as any}
+          search={{ type: "book" }}
           className="mt-8 inline-flex bg-charcoal text-sand px-7 py-4 rounded-sm font-body text-[15px] font-semibold tracking-[0.02em] hover:bg-clay transition-colors duration-150"
         >
           Inquire about this stay
@@ -165,23 +192,33 @@ function ArtHouseDetail() {
   );
 }
 
-function ComingSoonCard() {
+function HillEastDetail() {
+  const hasPhotos = HILL_EAST_PHOTOS.length > 0;
   return (
     <article className="grid gap-10 lg:grid-cols-[1.1fr_1fr]">
-      <div className="aspect-[4/3] rounded-[4px] border border-line overflow-hidden">
-        <StripedPlaceholder label="Coming Soon" className="w-full h-full" />
-      </div>
+      {hasPhotos ? (
+        <Gallery photos={HILL_EAST_PHOTOS} alt="Hill East Hide Away" />
+      ) : (
+        <div className="aspect-[4/3] rounded-[4px] border border-line overflow-hidden">
+          <StripedPlaceholder label="Photos Coming Soon" className="w-full h-full" />
+        </div>
+      )}
       <div>
         <p className="eyebrow mb-3">Hill East · Washington, DC</p>
-        <h2 className="font-display font-medium text-[40px] leading-[1.1] text-charcoal">Hill East Hide Away</h2>
-        <p className="mt-4 text-[17px] leading-[1.65] text-taupe">
-          Another curated stay, in the works. Join the list to hear first.
+        <h2 className="font-display font-medium text-[40px] leading-[1.1] text-charcoal">
+          Hill East Hide Away
+        </h2>
+        <p className="mt-4 text-[17px] leading-[1.65] text-charcoal/85">
+          A quiet retreat on the eastern edge of Capitol Hill, minutes from the river and the Hill's
+          best-kept-secret streets. Our second curated residence carries the same conviction as the
+          first: every room considered, every piece chosen.
         </p>
         <Link
           to="/contact"
+          search={{ type: "book" }}
           className="mt-8 inline-flex border border-charcoal text-charcoal px-7 py-4 rounded-sm font-body text-[15px] font-semibold tracking-[0.02em] hover:bg-charcoal hover:text-sand transition-colors duration-150"
         >
-          Get notified
+          Inquire about this stay
         </Link>
       </div>
     </article>

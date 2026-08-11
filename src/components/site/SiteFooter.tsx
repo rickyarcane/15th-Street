@@ -5,6 +5,7 @@ const NAV = [
   { to: "/properties", label: "Our Properties" },
   { to: "/about", label: "About" },
   { to: "/shop", label: "Shop" },
+  { to: "/reviews", label: "Guest Reviews" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
@@ -26,15 +27,24 @@ export function SiteFooter() {
           ))}
         </nav>
         <div className="flex flex-col gap-2 text-[14px]">
-          <a href="mailto:info@crownmgmt.com" className="text-sand/80 hover:text-clay transition-colors">
-            info@crownmgmt.com
+          <a
+            href="mailto:info@crownmgmt.biz"
+            className="text-sand/80 hover:text-clay transition-colors"
+          >
+            info@crownmgmt.biz
           </a>
           <p className="text-sand/60">Response within 24 hours</p>
         </div>
       </div>
       <div className="border-t border-sand/15">
-        <div className="max-w-[1200px] mx-auto px-6 py-6 font-mono uppercase tracking-[0.16em] text-[11px] text-sand/60">
-          © 2025 Crown Management
+        <div className="max-w-[1200px] mx-auto px-6 py-6 flex flex-wrap items-center justify-between gap-3 font-mono uppercase tracking-[0.16em] text-[11px] text-sand/60">
+          <span>© 2026 Crown Management</span>
+          <Link
+            to="/privacy"
+            className="hover:text-clay transition-colors underline-offset-4 hover:underline"
+          >
+            Privacy Policy
+          </Link>
         </div>
       </div>
     </footer>

@@ -1,11 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { StatsStrip } from "@/components/site/StatsStrip";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About — Crown Management" },
-      { name: "description", content: "A property management brand connecting guests with curated stays — and the art and furniture inside them." },
+      {
+        name: "description",
+        content:
+          "A property management brand connecting guests with curated stays — and the art and furniture inside them.",
+      },
       { property: "og:title", content: "About — Crown Management" },
       { property: "og:description", content: "Where comfort and experience converge." },
       { property: "og:url", content: "/about" },
@@ -20,6 +25,7 @@ function About() {
     <>
       <section className="pt-24 pb-16">
         <div className="max-w-[1200px] mx-auto px-6">
+          <Breadcrumbs className="mb-8" />
           <p className="eyebrow mb-4">Our Story</p>
           <h1 className="font-display font-bold text-[44px] md:text-[56px] leading-[1.08] text-charcoal max-w-3xl">
             Where comfort and experience converge
@@ -30,9 +36,9 @@ function About() {
       <section className="pb-16">
         <div className="max-w-2xl mx-auto px-6">
           <p className="font-body text-[20px] md:text-[22px] leading-[1.55] text-charcoal/90">
-            Connecting you with your home away from home. What started as a single property management
-            company grew into a brand providing guests the opportunity to purchase unique art and furniture
-            pieces staged throughout our properties.
+            Connecting you with your home away from home. What started as a single property
+            management company grew into a brand providing guests the opportunity to purchase unique
+            art and furniture pieces staged throughout our properties.
           </p>
         </div>
       </section>
@@ -52,12 +58,15 @@ function About() {
           <div>
             <p className="eyebrow mb-4">Our Ethos</p>
             <p className="font-body text-[18px] leading-[1.65] text-charcoal/90">
-              We believe in exceptional customer service, so Crown Management is just a phone call or text
-              away! We are dedicated to providing clients with world-class stays in the heart of DC!
+              We believe in exceptional customer service, so Crown Management is just a phone call
+              or text away! We are dedicated to providing clients with world-class stays in the
+              heart of DC!
             </p>
           </div>
           <div className="flex justify-center md:justify-end">
-            <span className="font-display font-bold text-[160px] leading-none text-clay/15">CM</span>
+            <span className="font-display font-bold text-[160px] leading-none text-clay/15">
+              CM
+            </span>
           </div>
         </div>
       </section>
@@ -70,10 +79,26 @@ function About() {
           </h2>
           <div className="grid gap-6 md:grid-cols-2">
             {[
-              { n: "01", t: "Customer Experience", d: "The hallmark of our operations. We strive for our spaces to feel like your home away from home." },
-              { n: "02", t: "Transparency", d: "No BS over here! No hidden fees. No extra red tape." },
-              { n: "03", t: "Efficiency", d: "We've built efficiency into each step of the customer experience. We're slashing the time from browsing to booking!" },
-              { n: "04", t: "Around the Clock Support", d: "We can't always predict when things might go awry, but The Crown will be here to help you navigate 24/7!" },
+              {
+                n: "01",
+                t: "Customer Experience",
+                d: "The hallmark of our operations. We strive for our spaces to feel like your home away from home.",
+              },
+              {
+                n: "02",
+                t: "Transparency",
+                d: "No BS over here! No hidden fees. No extra red tape.",
+              },
+              {
+                n: "03",
+                t: "Efficiency",
+                d: "We've built efficiency into each step of the customer experience. We're slashing the time from browsing to booking!",
+              },
+              {
+                n: "04",
+                t: "Around the Clock Support",
+                d: "We can't always predict when things might go awry, but The Crown will be here to help you navigate 24/7!",
+              },
             ].map((p) => (
               <div key={p.n} className="bg-sand border border-line rounded-[4px] p-8">
                 <p className="font-mono uppercase tracking-[0.12em] text-[11px] text-clay">{p.n}</p>

@@ -1,11 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { StripedPlaceholder } from "@/components/site/Placeholder";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 
 export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
       { title: "The Collection — Crown Management" },
-      { name: "description", content: "Original art and furniture from DC makers — every piece staged in a Crown Management residence is available to take home." },
+      {
+        name: "description",
+        content:
+          "Original art and furniture from DC makers — every piece staged in a Crown Management residence is available to take home.",
+      },
       { property: "og:title", content: "The Collection — Crown Management" },
       { property: "og:description", content: "Stay in the design. Take it home." },
       { property: "og:url", content: "/shop" },
@@ -39,6 +44,7 @@ function Shop() {
       {/* Hero */}
       <section className="bg-charcoal text-sand py-24 -mt-16 pt-32">
         <div className="max-w-[1200px] mx-auto px-6">
+          <Breadcrumbs onDark className="mb-8" />
           <p className="eyebrow mb-4 text-clay">The Collection</p>
           <h1 className="font-display font-bold text-[56px] md:text-[76px] leading-[1.05] text-sand">
             Stay in the design.
@@ -47,8 +53,8 @@ function Shop() {
             Take it home.
           </p>
           <p className="mt-8 max-w-2xl text-[17px] leading-[1.65] text-sand/80">
-            Every piece in a Crown Management residence is available to take home. Furniture, art, objects —
-            curated for the space, available for yours.
+            Every piece in a Crown Management residence is available to take home. Furniture, art,
+            objects — curated for the space, available for yours.
           </p>
         </div>
       </section>
@@ -66,7 +72,7 @@ function Shop() {
             ))}
           </div>
           <p className="mt-10 font-mono uppercase tracking-[0.12em] text-[11px] text-taupe text-center">
-            Pricing available upon inquiry · info@crownmgmt.com
+            Pricing available upon inquiry · info@crownmgmt.biz
           </p>
         </div>
       </section>
@@ -97,7 +103,7 @@ function Shop() {
           </h2>
           <Link
             to="/contact"
-            search={{ type: "inquire-piece" } as any}
+            search={{ type: "inquire-piece" }}
             className="mt-8 inline-flex bg-sand text-charcoal px-7 py-4 rounded-sm font-body text-[15px] font-semibold tracking-[0.02em] hover:bg-clay hover:text-sand transition-colors duration-150"
           >
             Contact us
@@ -116,7 +122,9 @@ function Card({ eyebrow, title, meta }: { eyebrow: string; title: string; meta: 
       </div>
       <div className="p-5">
         <p className="eyebrow mb-2">{eyebrow}</p>
-        <h3 className="font-display font-medium text-[22px] leading-tight text-charcoal">{title}</h3>
+        <h3 className="font-display font-medium text-[22px] leading-tight text-charcoal">
+          {title}
+        </h3>
         <p className="mt-2 font-mono text-[12px] uppercase tracking-[0.12em] text-taupe">{meta}</p>
         <span className="mt-4 inline-block text-clay underline underline-offset-4 font-medium text-[14px]">
           Inquire →

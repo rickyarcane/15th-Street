@@ -3,23 +3,29 @@ import { ArrowRight } from "lucide-react";
 import { StatsStrip } from "@/components/site/StatsStrip";
 import { StripedPlaceholder } from "@/components/site/Placeholder";
 import { HorizontalLockup } from "@/components/site/Logo";
+import { HERO_IMAGE, ART_HOUSE_COVER, HILL_EAST_COVER } from "@/lib/property-photos";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Crown Management — Stays & Objects in Washington, DC" },
-      { name: "description", content: "Curated short-term residences in the heart of DC. Stay in the design — take it home." },
+      {
+        name: "description",
+        content:
+          "Curated short-term residences in the heart of DC. Stay in the design — take it home.",
+      },
       { property: "og:title", content: "Crown Management — Stays & Objects" },
-      { property: "og:description", content: "Curated short-term residences in the heart of DC. Stay in the design — take it home." },
+      {
+        property: "og:description",
+        content:
+          "Curated short-term residences in the heart of DC. Stay in the design — take it home.",
+      },
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
   component: Index,
 });
-
-const ART_HOUSE_IMG =
-  "https://images.homes.com/listings/210/3167689394-010294422/406-15th-st-se-washington-dc-unit-b-primaryphoto.jpg";
 
 function Index() {
   return (
@@ -28,7 +34,7 @@ function Index() {
       <section className="relative min-h-screen flex items-center bg-charcoal -mt-16 pt-16">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${ART_HOUSE_IMG})` }}
+          style={{ backgroundImage: `url(${HERO_IMAGE})` }}
         />
         <div className="absolute inset-0 bg-charcoal/55" />
         <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-24 text-center">
@@ -74,7 +80,13 @@ function Index() {
 
           <div className="mt-12 grid gap-8 md:grid-cols-2">
             <PropertyCard
-              image={<img src={ART_HOUSE_IMG} alt="The Art House" className="w-full h-full object-cover" />}
+              image={
+                <img
+                  src={ART_HOUSE_COVER}
+                  alt="The Art House"
+                  className="w-full h-full object-cover"
+                />
+              }
               eyebrow="Capitol Hill · Washington, DC"
               title="The Art House"
               meta="2 BR · 2.5 BA · 1,700 SQ FT"
@@ -82,15 +94,30 @@ function Index() {
               ctaLabel="Inquire →"
             />
             <PropertyCard
-              image={<StripedPlaceholder label="Coming Soon" className="w-full h-full" />}
+              image={
+                HILL_EAST_COVER ? (
+                  <img
+                    src={HILL_EAST_COVER}
+                    alt="Hill East Hide Away"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <StripedPlaceholder label="Photos Coming Soon" className="w-full h-full" />
+                )
+              }
               eyebrow="Hill East · Washington, DC"
               title="Hill East Hide Away"
               meta="A second curated residence."
+              ctaHref="/contact?type=book"
+              ctaLabel="Inquire →"
             />
           </div>
 
           <div className="mt-12 text-center">
-            <Link to="/properties" className="text-clay underline underline-offset-4 hover:decoration-2 font-medium">
+            <Link
+              to="/properties"
+              className="text-clay underline underline-offset-4 hover:decoration-2 font-medium"
+            >
               View all properties →
             </Link>
           </div>
@@ -108,8 +135,16 @@ function Index() {
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {[
-              { eyebrow: "Local Maker · DC", title: "Walnut Console", meta: "White oak · 72×34 in" },
-              { eyebrow: "Local Maker · DC", title: "Untitled No. 4", meta: "Oil on linen · 36×48 in" },
+              {
+                eyebrow: "Local Maker · DC",
+                title: "Walnut Console",
+                meta: "White oak · 72×34 in",
+              },
+              {
+                eyebrow: "Local Maker · DC",
+                title: "Untitled No. 4",
+                meta: "Oil on linen · 36×48 in",
+              },
               { eyebrow: "Handcrafted", title: "Iron Arc Lamp", meta: "Patinated steel · 78 in" },
             ].map((p) => (
               <ObjectCard key={p.title} {...p} />
@@ -117,7 +152,10 @@ function Index() {
           </div>
 
           <div className="mt-12 text-center">
-            <Link to="/shop" className="text-clay underline underline-offset-4 hover:decoration-2 font-medium">
+            <Link
+              to="/shop"
+              className="text-clay underline underline-offset-4 hover:decoration-2 font-medium"
+            >
               View the full collection →
             </Link>
           </div>
@@ -131,7 +169,8 @@ function Index() {
           <div className="grid gap-8 md:grid-cols-2">
             {[
               {
-                quote: "A truly singular stay. The art, the light, the quiet — nothing like a hotel.",
+                quote:
+                  "A truly singular stay. The art, the light, the quiet — nothing like a hotel.",
                 who: "M.T., Capitol Hill · Oct 2024",
               },
               {
@@ -141,7 +180,9 @@ function Index() {
               },
             ].map((t) => (
               <figure key={t.who} className="bg-sand border border-line p-8 rounded-[4px]">
-                <span className="block font-display text-clay text-[64px] leading-none mb-2">"</span>
+                <span className="block font-display text-clay text-[64px] leading-none mb-2">
+                  "
+                </span>
                 <blockquote className="font-display italic text-[22px] leading-[1.4] text-charcoal">
                   {t.quote}
                 </blockquote>
@@ -197,10 +238,15 @@ function PropertyCard({
       <div className="aspect-[3/2] bg-sand">{image}</div>
       <div className="p-6">
         <p className="eyebrow mb-2">{eyebrow}</p>
-        <h3 className="font-display font-medium text-[28px] leading-tight text-charcoal">{title}</h3>
+        <h3 className="font-display font-medium text-[28px] leading-tight text-charcoal">
+          {title}
+        </h3>
         <p className="mt-2 font-mono text-[12px] uppercase tracking-[0.12em] text-taupe">{meta}</p>
         {ctaHref && ctaLabel && (
-          <Link to={ctaHref} className="mt-5 inline-block text-clay underline underline-offset-4 hover:decoration-2 font-medium">
+          <Link
+            to={ctaHref}
+            className="mt-5 inline-block text-clay underline underline-offset-4 hover:decoration-2 font-medium"
+          >
             {ctaLabel}
           </Link>
         )}
@@ -217,7 +263,9 @@ function ObjectCard({ eyebrow, title, meta }: { eyebrow: string; title: string; 
       </div>
       <div className="p-5">
         <p className="eyebrow mb-2">{eyebrow}</p>
-        <h3 className="font-display font-medium text-[22px] leading-tight text-charcoal">{title}</h3>
+        <h3 className="font-display font-medium text-[22px] leading-tight text-charcoal">
+          {title}
+        </h3>
         <p className="mt-2 font-mono text-[12px] uppercase tracking-[0.12em] text-taupe">{meta}</p>
         <span className="mt-4 inline-block text-clay underline underline-offset-4 font-medium text-[14px]">
           Inquire →
