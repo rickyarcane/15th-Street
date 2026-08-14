@@ -1,65 +1,57 @@
 # Lovable ↔ GitHub sync
 
-## Why the Aug 11 updates never appeared in Lovable
+**Status: resolved on Aug 14, 2026.** The Lovable project now syncs with GitHub,
+and the Aug 11 site updates are in it.
 
-The Lovable project (**Crown Management**, `book-with-us-today.lovable.app`) has
-no GitHub connection. Nothing committed to this repository reaches Lovable on
-its own, and nothing edited in Lovable lands here.
+## Which repo is the live one
 
-The commits in this repo were exported into git by hand during earlier sessions,
-which is why the two sides drifted apart. `docs/setup-notes.md` says the reviews
-migration is "applied by Lovable Cloud when this branch syncs" — that sync does
-not exist yet, so it never ran.
+When the GitHub integration was connected, Lovable created its **own** repository
+rather than adopting this one:
 
-Two independent gaps compound the problem:
+> **`rickyarcane/book-with-us-today` — this is the repo Lovable syncs with.**
 
-1. The Aug 11 work was committed to `claude/crown-mgmt-site-updates-3eo1x8` and
-   never merged. `main` is still the empty initial commit.
-2. Even a merge to `main` would not have helped, because Lovable is not
-   watching this repository.
+Lovable tracks its `main`. Push there and Lovable picks the changes up.
 
-## What Lovable is missing
+This repo (`rickyarcane/15th-Street`) is **not** connected to Lovable and never
+was. It holds hand-exported snapshots from earlier sessions. Treat it as an
+archive; new work belongs in `book-with-us-today`.
 
-New files, none of which exist in the Lovable project:
+## Why the Aug 11 updates were invisible
 
-- `src/routes/reviews.tsx`, `src/routes/privacy.tsx`, `src/routes/thank-you.tsx`
-- `src/components/site/BookingCalendar.tsx`, `Breadcrumbs.tsx`, `StickyMobileCta.tsx`
-- `src/lib/property-photos.ts`
-- `supabase/migrations/20260811020000_guest_reviews.sql`
-- `docs/setup-notes.md`, `docs/guest-faq-DRAFT.md`
+Two problems stacked up:
 
-Modified files: `src/routes/__root.tsx`, `about.tsx`, `contact.tsx`, `index.tsx`,
-`properties.tsx`, `shop.tsx`, `src/components/site/SiteHeader.tsx`,
-`SiteFooter.tsx`, `src/integrations/supabase/types.ts`, `src/routeTree.gen.ts`.
+1. The work was committed to `claude/crown-mgmt-site-updates-3eo1x8` in this repo
+   and never merged — `main` here is still an empty initial commit.
+2. Lovable was not watching this repo at all, so even a merge would have changed
+   nothing. The note in `docs/setup-notes.md` saying the reviews migration is
+   "applied by Lovable Cloud when this branch syncs" assumed a sync that did not
+   exist.
 
-## What only exists in Lovable
+## How it was resolved
 
-`src/components/ui/**` — roughly 60 shadcn/ui components — is in the Lovable
-project but was never committed here, along with `.env` and `package-lock.json`.
-This repository therefore cannot rebuild the site on its own today. Connecting
-Lovable to GitHub fixes this in the same step, because Lovable pushes its full
-tree on connect.
+Lovable's export turned out to be byte-identical to the pre-update snapshot in
+this repo apart from trailing newlines, so the Aug 11 commit applied onto
+Lovable's `main` with no conflicts:
 
-## Connecting the two
+- Cherry-picked `3322d7b` onto `book-with-us-today` `main` → commit `a2f320a`.
+- 20 files, +1796/−406. All 46 `src/components/ui/**` components preserved.
+- Verified with a clean `vite build` before pushing.
+- Confirmed Lovable ingested it: `20260811020000_guest_reviews.sql` and
+  `src/lib/property-photos.ts` are now present in the project.
 
-Step 1 has to happen in the Lovable UI; it is an OAuth handshake that cannot be
-driven from this repo.
+`src/routeTree.gen.ts` is generated and gets rewritten on every build, so the
+committed version is left as-is rather than churned.
 
-1. In the Lovable editor for Crown Management, open the GitHub integration and
-   connect it to `rickyarcane/15th-Street`. Lovable pushes its current tree —
-   the pre-Aug-11 state plus the missing `src/components/ui/**` — to the repo.
-2. Reconcile: replay the Aug 11 changes on top of whatever Lovable pushed. Do
-   this as a merge or a rebase, never a force-push, or the components Lovable
-   just contributed will be lost. The changed-file list above is the checklist.
-3. Push the reconciled result to the branch Lovable tracks (normally `main`).
-   Lovable picks the changes up and applies
-   `20260811020000_guest_reviews.sql` to Lovable Cloud.
+Note that `bun.lock` in `book-with-us-today` resolves to Lovable's private
+registry (`europe-west4-npm.pkg.dev`), which returns 403 outside their sandbox.
+To build locally, move `bun.lock` aside, run
+`bun install --registry https://registry.npmjs.org`, then restore it. Do not
+commit a lockfile regenerated that way.
 
-Expect a conflict in `src/routeTree.gen.ts`. It is generated — resolve it by
-regenerating rather than by hand-merging.
+## Still needs a manual step
 
-## After the sync
-
-`docs/setup-notes.md` lists three manual items that the sync does not cover:
-the listing photos, the Google Calendar sharing setting, and enabling the
-Google auth provider in Lovable Cloud so the reviews page can accept sign-ins.
+Syncing the code does not cover the three items in `docs/setup-notes.md`: the
+enhanced listing photos, making the booking calendar public, and enabling the
+Google auth provider in Lovable Cloud. Until Google auth is on, the reviews page
+renders but sign-in returns "provider not enabled" — worth finishing before
+publishing to the live site.
