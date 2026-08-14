@@ -48,10 +48,27 @@ To build locally, move `bun.lock` aside, run
 `bun install --registry https://registry.npmjs.org`, then restore it. Do not
 commit a lockfile regenerated that way.
 
-## Still needs a manual step
+## GitHub sync does not run migrations
 
-Syncing the code does not cover the three items in `docs/setup-notes.md`: the
-enhanced listing photos, making the booking calendar public, and enabling the
-Google auth provider in Lovable Cloud. Until Google auth is on, the reviews page
-renders but sign-in returns "provider not enabled" — worth finishing before
-publishing to the live site.
+Worth knowing for next time: pushing a new file under `supabase/migrations/`
+syncs the *file* into the project but does **not** apply it to Lovable Cloud.
+After the Aug 11 sync, `guest_reviews` did not exist in the database, and the
+giveaway was Lovable regenerating `src/integrations/supabase/types.ts` from the
+live schema with no `guest_reviews` entry — silently dropping the type that came
+in with the commit.
+
+Applying it took an explicit request to the Lovable agent, which created its own
+timestamped migration (`20260814191758_*.sql`). That file is functionally
+identical to the original; only comments and a trailing newline differ. Both now
+sit in `supabase/migrations/`, which is harmless but means the original
+`20260811020000_guest_reviews.sql` is a no-op record rather than the migration
+that actually ran.
+
+**Check after any sync that adds a migration:** confirm the new table appears in
+the regenerated `types.ts`. If it does not, the migration has not run.
+
+## Remaining manual items
+
+Google auth is now enabled, so reviews sign-in works. Still outstanding from
+`docs/setup-notes.md`: the enhanced listing photos, and making the booking
+calendar public.
